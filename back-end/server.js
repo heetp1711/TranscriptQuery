@@ -6,6 +6,8 @@ const axios = require('axios')
 let cheerio = require('cheerio');
 let fs = require('fs');
 const { time } = require('console');
+// let mysql = require('mysql');
+const sqlite3 = require('sqlite3').verbose();
 
 var app = express();
 
@@ -25,6 +27,29 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+
+// let connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'project'
+// });
+
+// connection.connect(function(err) {
+//     if (err) {
+//       return console.error('error: ' + err.message);
+//     }
+  
+//     console.log('Connected to the MySQL server.');
+//   });
+
+let db = new sqlite3.Database('data/project.db', (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Connected to the in-memory SQlite database.');
+  });
+  
 // Use routes as a module (see index.js)
 // require('./routes')(app, router);
 
@@ -125,3 +150,36 @@ var scrapeLinks = async (data) => {
 app.listen(port);
 console.log('Server running on port ' + port);
 
+app.get('/getData', (req, res) => {
+    db.get('SELECT * FROM Users', (err, result) => {
+       if(err) {
+        console.log(err);
+       } else {
+        res.send(result);
+       }
+    })
+
+    // let sql = `CREATE TAB`;
+
+    // db.all(sql, [], (err, rows) => {
+    // if (err) {
+    //     throw err;
+    // }
+    // rows.forEach((row) => {
+    //     console.log(row.name);
+    // });
+    // });
+
+
+    // let sql = `SELECT * FROM Users`;
+
+    // db.all(sql, [], (err, rows) => {
+    
+    // if (err) {
+    //     throw err;
+    // }
+    // rows.forEach((row) => {
+    //     console.log(row.name);
+    // });
+// });
+});

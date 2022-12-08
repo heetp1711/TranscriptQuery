@@ -1,3 +1,12 @@
-# CourseProject
+# CS410 Final Project
 
-Please fork this repository and paste the github link of your fork on Microsoft CMT. Detailed instructions are on Coursera under Week 1: Course Project Overview/Week 9 Activities.
+## Documentation pdf above has all the info on how to use this repo!
+
+## Presentation slides are also included above along with the video file!
+
+# CS410 Final Project Video (YouTube Transcript Query)
+
+[![CS410 Final Project Video (YouTube Transcript Query)](https://img.youtube.com/vi/SbumzA4rBro/default.jpg)](https://youtu.be/SbumzA4rBro)
+
+
+

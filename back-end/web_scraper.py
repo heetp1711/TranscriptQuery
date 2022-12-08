@@ -14,12 +14,6 @@ driver_service=Service(ChromeDriverManager().install())
 
 driver = webdriver.Chrome(service=driver_service)
 
-# HEADLESS NO BROWSER vvv
-# op = webdriver.ChromeOptions()
-# # op.add_argument('headless')
-# op.headless = True
-# driver = webdriver.Chrome('./chromedriver.exe', options=op)
-# driver = webdriver.Chrome('./chromedriver.exe', options=op)
 
 # GET CHANNEL NAME
 curr_year = date.today().year #2022
@@ -30,10 +24,6 @@ link = str(sys.argv[1])
 start = curr_year - int(sys.argv[2])
 end = curr_year - int(sys.argv[3])
 channel_url = link
-# print(start)
-# print(end)
-# print(channel_url)
-# channel_url = "https://www.youtube.com/c/SpaceX/videos"
 driver.get(channel_url)
 driver.implicitly_wait(1)
 
@@ -46,11 +36,9 @@ try:
         driver.execute_script(scroll_func)
         scroll_height *= 2
         sleep(0.1)
-        # print(element)
         element = driver.find_element(By.TAG_NAME, 'ytd-continuation-item-renderer')
     sleep(0.5)
 except:
-    # print("All videos loaded", flush=True)
     pass
 
 ### GET VIDEO NAME AND DATE
@@ -74,12 +62,8 @@ for detail in details:
     years_ago = parseDate(video_date[1].text)
     
     if (years_ago >= start and years_ago <= end):
-        # video_name = detail.find_element(By.TAG_NAME, 'h3')
-        # video_name = video_name.find_element(By.TAG_NAME, 'a')
-        # print(video_name.get_attribute("title"))
 
         idxs_in_range.append(i)
-        # print(video_date[1].text)
         
     i += 1
 
@@ -94,6 +78,5 @@ for element in elements:
     if (link and i in idxs_in_range):
         transcript_links.append(link)
     i += 1
-# print("Number of videos: " + str(len(elements) - 2), flush=True)
 print(transcript_links, flush=True)
 driver.quit()

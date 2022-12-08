@@ -16,12 +16,9 @@ def dataFormatter(dataToSend):
             transcript = temp[0:idx]
             temp = temp[temp.find("\r\n")+2:]
         mydict[timestamp] = transcript
-    # print(mydict)
     json_object = json.dumps(mydict, indent = 4) 
-    # print(json_object)
     return(json_object)
     
 
-# print(dataFormatter("0:06\r\neverything we're doing up in space\r\n0:08\r\nis to benefit humanity or benefit human\r\n0:10\r\nexploration\r\n0:14\r\nwe are natural explorers we want to"))
 
 

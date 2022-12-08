@@ -11,10 +11,6 @@ const {spawnSync} = require('child_process')
 
 var app = express();
 
-
-  
-
-
 var port = process.env.PORT || 3002
 
 // Allow CORS so that backend and frontend could be put on different servers
@@ -31,9 +27,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Use routes as a module (see index.js)
-// require('./routes')(app, router);
-
 function resolveAfter2Seconds() {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -43,9 +36,7 @@ function resolveAfter2Seconds() {
 }
 app.get('/', async (req, res) => {
     var dataToSend
-
     const python_ = spawn('python', ['back-end/web_scraper.py']);
-
     python_.stdout.on('data', async (data) => {
         // console.log('Pipe data from python script ...');
         dataToSend = data.toString();
@@ -88,22 +79,17 @@ app.post('/query', async (req, res) => {
         let i = 0
         const result = await resolveAfter2Seconds()
         for (const d of link_arr) {
-            // const result = await resolveAfter2Seconds()
 
             if (d != '[' && d != ', ' && d != ']\r\n')  {
                 scrapeLinks(d, channelName, startDate, endDate)
             }
             if (d == ']\r\n') {
-                //Call searcheng.py by spawning
-                //axios post
-                // const result = await resolveAfter2Seconds()
                 searchTranscripts(searchQuery, channelName, startDate, endDate)
                 
             }
             i += 1
         }
         
-        // console.log("hi")
     });
 
     python_.on('close', (code) => {
@@ -114,35 +100,14 @@ app.post('/query', async (req, res) => {
 
 var scrapeLinks = async (data, channelName, startDate, endDate) => {
     const python_ = spawnSync('python', ['back-end/scraper.py', data, channelName, startDate, endDate]);
-    // python_.stdout.on('data', (data) => {
-    //     // console.log('Pipe data from python script ...');
-    //     dataToSend = data.toString();
-    //     // scrapeLinks(data)
-    //     console.log(dataToSend)
-    // });
-
-    // python_.on('close', (code) => {
-    //     console.log(`scrape process close all stdio with code ${code}`);
-
-    // });
+ 
 
 }
 
 var searchTranscripts = async (searchQuery, channelName, startDate, endDate) => {
     const python_ = spawnSync('python', ['back-end/searchEngine.py', searchQuery, channelName, startDate, endDate]);
-    // python_.stdout.on('data', (data) => {
-    //     console.log('Pipe data from search script ...');
-    //     dataToSend = data.toString();
-    //     // scrapeLinks(data)
-    //     console.log(dataToSend)
-    // });
-
-    // python_.on('close', (code) => {
-    //     console.log(`search process close all stdio with code ${code}`);
-    // });
     console.log(python_.output.toString('utf8'))
 }
-
 
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('back-end/data/project.db', (err) => {
@@ -164,27 +129,6 @@ app.post('/results/display', (req, res) => {
     });
 });
 
-// var searchTranscripts = async (searchQuery, channelName, startDate, endDate) => {
-//     const python_ = spawnSync('python', ['back-end/searchEngine.py', searchQuery, channelName, startDate, endDate]);
-//     python_.stdout.on('data', (data) => {
-//         console.log('Pipe data from search script ...');
-//         dataToSend = data.toString();
-//         // scrapeLinks(data)
-//         console.log(dataToSend)
-//     });
-
-//     python_.on('close', (code) => {
-//         console.log(`search process close all stdio with code ${code}`);
-//     });
-
-// }
-
-// const asyncScrape = data =>
-//   new Promise(resolve =>
-//     setTimeout(
-//       () => resolve(scrapeLinks(data))
-//     )
-//   );
 
 // Start the server
 app.listen(port);
